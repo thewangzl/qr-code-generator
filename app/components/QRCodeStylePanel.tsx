@@ -126,8 +126,8 @@ export default function QRCodeStylePanel({ style, onStyleChange }: QRCodeStylePa
                 ))}
 
                 {/* 自定义上传 */}
-                <label className="aspect-square flex items-center justify-center">
-                  <div className={`w-full h-full flex items-center justify-center rounded border transition-all duration-200 cursor-pointer ${
+                <label className="aspect-square flex flex-col items-center justify-center">
+                  <div className={`w-full h-full flex flex-col items-center justify-center rounded border transition-all duration-200 cursor-pointer ${
                     style.logo && !PRESET_LOGOS.some(logo => style.logo?.includes(logo.id))
                       ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-500/20'
                       : 'border-gray-200 hover:border-blue-500 hover:bg-blue-50'
@@ -135,6 +135,7 @@ export default function QRCodeStylePanel({ style, onStyleChange }: QRCodeStylePa
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-gray-600 block">
                       <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clipRule="evenodd" />
                     </svg>
+                    <span className="block text-xs text-gray-500 mt-1">Upload</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -148,11 +149,13 @@ export default function QRCodeStylePanel({ style, onStyleChange }: QRCodeStylePa
                 {style.logo && (
                   <button
                     onClick={() => onStyleChange({ ...style, logo: undefined })}
-                    className="aspect-square p-1 rounded border border-gray-200 hover:border-red-500 hover:bg-red-50 flex items-center justify-center transition-all duration-200"
+                    className="aspect-square p-1 rounded border border-gray-200 hover:border-red-200 hover:bg-red-50 flex flex-col items-center justify-center transition-all duration-200 group"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-red-500 block">
-                      <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z" clipRule="evenodd" />
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-red-400 group-hover:text-red-500 block">
+                      <circle cx="12" cy="12" r="10" fill="currentColor" fillOpacity="0.12" />
+                      <path stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M15 9l-6 6m0-6l6 6" />
                     </svg>
+                    <span className="block text-xs text-gray-500 mt-1">Remove</span>
                   </button>
                 )}
               </div>

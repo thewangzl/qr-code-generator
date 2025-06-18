@@ -103,7 +103,7 @@ export default function QRCodeGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 sm:py-12">
+    <div className="w-10/12 mx-auto bg-gradient-to-br from-gray-50 to-gray-100 py-8 sm:py-12">
       <div className="text-center mb-8 sm:mb-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
           QR Code Generator
