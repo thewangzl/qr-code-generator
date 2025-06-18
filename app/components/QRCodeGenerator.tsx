@@ -9,24 +9,56 @@ import QRCodeTemplates from './QRCodeTemplates';
 import QRCodeInput from './QRCodeInput';
 import { QRCodeType, QRCodeStyle, QRCodeData } from '../types/qrcode';
 
+function isValidContent(type: QRCodeType, data: QRCodeData) {
+  switch (type) {
+    case 'url': return !!data.url;
+    case 'text': return !!data.text;
+    case 'vcard': return !!data.vcard && (data.vcard.name || data.vcard.phone || data.vcard.email);
+    case 'wifi': return !!data.wifi && data.wifi.ssid;
+    case 'email': return !!data.email && data.email.address;
+    case 'phone': return !!data.phone;
+    case 'sms': return !!data.sms && data.sms.phone;
+    case 'event': return !!data.event && data.event.title;
+    case 'location': return !!data.location && (data.location.latitude || data.location.longitude);
+    default: return false;
+  }
+}
+
 export default function QRCodeGenerator() {
   const [type, setType] = useState<QRCodeType>('url');
-  const [data, setData] = useState<QRCodeData>({ text: '' });
+  const [data, setData] = useState<QRCodeData>({ url: '' });
   const [style, setStyle] = useState<QRCodeStyle>({
     fgColor: '#000000',
     bgColor: '#ffffff',
     eyeStyle: 'square',
   });
   const [activeSection, setActiveSection] = useState<'template' | 'color' | 'eye' | 'logo'>('template');
+  const [lastValidType, setLastValidType] = useState<QRCodeType>('url');
+  const [lastValidData, setLastValidData] = useState<QRCodeData>({ url: '' });
 
   const handleTypeChange = (newType: QRCodeType) => {
     setType(newType);
-    // Reset data when type changes
-    setData({ text: '' });
+    // 只清空输入框，不清空二维码
+    switch (newType) {
+      case 'url': setData({ url: '' }); break;
+      case 'text': setData({ text: '' }); break;
+      case 'vcard': setData({ vcard: {} }); break;
+      case 'wifi': setData({ wifi: {} }); break;
+      case 'email': setData({ email: {} }); break;
+      case 'phone': setData({ phone: '' }); break;
+      case 'sms': setData({ sms: {} }); break;
+      case 'event': setData({ event: {} }); break;
+      case 'location': setData({ location: {} }); break;
+      default: setData({});
+    }
   };
 
   const handleDataChange = (newData: QRCodeData) => {
     setData(newData);
+    if (isValidContent(type, newData)) {
+      setLastValidType(type);
+      setLastValidData(newData);
+    }
   };
 
   const handleStyleChange = (newStyle: QRCodeStyle) => {
@@ -101,8 +133,8 @@ export default function QRCodeGenerator() {
           <div className="flex justify-center">
             <div className="max-w-[400px] w-full">
               <QRCodeDisplay
-                type={type}
-                data={data}
+                type={lastValidType}
+                data={lastValidData}
                 style={style}
               />
             </div>
