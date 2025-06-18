@@ -321,89 +321,91 @@ END:VCARD`;
   };
 
   return (
-    <div className="py-4 sm:py-6 lg:py-8">
-      <div className="text-center mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">QR Code Generator</h1>
-        <p className="mt-2 text-sm sm:text-base text-gray-600">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 sm:py-12">
+      <div className="text-center mb-8 sm:mb-12">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+          QR Code Generator
+        </h1>
+        <p className="mt-3 text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
           Create beautiful QR codes with custom styles and logos
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
         {/* 左侧：设置面板 */}
-        <div className="lg:col-span-7 space-y-4">
+        <div className="lg:col-span-7 space-y-6">
           {/* QR Code Content */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-6">
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200/50 backdrop-blur-sm p-6 sm:p-8">
             {/* Type Selection */}
-            <div className="mb-4">
+            <div className="mb-6">
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => handleTypeChange('url')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                     type === 'url'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                      : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
                   }`}
                 >
                   URL
                 </button>
                 <button
                   onClick={() => handleTypeChange('text')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                     type === 'text'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                      : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
                   }`}
                 >
                   Text
                 </button>
                 <button
                   onClick={() => handleTypeChange('vcard')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                     type === 'vcard'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                      : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
                   }`}
                 >
                   vCard
                 </button>
                 <button
                   onClick={() => handleTypeChange('wifi')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                     type === 'wifi'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                      : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
                   }`}
                 >
                   WiFi
                 </button>
                 <button
                   disabled
-                  className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 bg-gray-50 cursor-not-allowed"
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
                 >
                   Email
                 </button>
                 <button
                   disabled
-                  className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 bg-gray-50 cursor-not-allowed"
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
                 >
                   Phone
                 </button>
                 <button
                   disabled
-                  className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 bg-gray-50 cursor-not-allowed"
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
                 >
                   SMS
                 </button>
                 <button
                   disabled
-                  className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 bg-gray-50 cursor-not-allowed"
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
                 >
                   Event
                 </button>
                 <button
                   disabled
-                  className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 bg-gray-50 cursor-not-allowed"
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
                 >
                   Location
                 </button>
@@ -415,18 +417,18 @@ END:VCARD`;
           </div>
 
           {/* Style Settings */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-6">
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200/50 backdrop-blur-sm p-6 sm:p-8">
             <div className="space-y-4">
               {/* Templates */}
               <div>
                 <button
                   onClick={() => toggleSection('template')}
-                  className="w-full flex items-center justify-between text-left"
+                  className="w-full flex items-center justify-between text-left group"
                 >
-                  <h3 className="text-sm font-medium text-gray-900">Templates</h3>
+                  <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Templates</h3>
                   <ChevronDownIcon
-                    className={`w-5 h-5 text-gray-500 transition-transform ${
-                      activeSection === 'template' ? 'transform rotate-180' : ''
+                    className={`w-5 h-5 text-gray-500 transition-all duration-200 ${
+                      activeSection === 'template' ? 'transform rotate-180 text-blue-600' : ''
                     }`}
                   />
                 </button>
@@ -441,12 +443,12 @@ END:VCARD`;
               <div>
                 <button
                   onClick={() => toggleSection('color')}
-                  className="w-full flex items-center justify-between text-left"
+                  className="w-full flex items-center justify-between text-left group"
                 >
-                  <h3 className="text-sm font-medium text-gray-900">Colors</h3>
+                  <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Colors</h3>
                   <ChevronDownIcon
-                    className={`w-5 h-5 text-gray-500 transition-transform ${
-                      activeSection === 'color' ? 'transform rotate-180' : ''
+                    className={`w-5 h-5 text-gray-500 transition-all duration-200 ${
+                      activeSection === 'color' ? 'transform rotate-180 text-blue-600' : ''
                     }`}
                   />
                 </button>
@@ -460,7 +462,7 @@ END:VCARD`;
                             type="color"
                             value={style.fgColor}
                             onChange={(e) => handleStyleChange({ ...style, fgColor: e.target.value })}
-                            className="w-10 h-10 rounded-lg border border-gray-300 cursor-pointer"
+                            className="w-10 h-10 rounded-lg border border-gray-200 cursor-pointer hover:ring-2 hover:ring-blue-500/20 transition-all"
                           />
                           <span className="text-sm text-gray-600">{style.fgColor}</span>
                         </div>
@@ -472,7 +474,7 @@ END:VCARD`;
                             type="color"
                             value={style.bgColor}
                             onChange={(e) => handleStyleChange({ ...style, bgColor: e.target.value })}
-                            className="w-10 h-10 rounded-lg border border-gray-300 cursor-pointer"
+                            className="w-10 h-10 rounded-lg border border-gray-200 cursor-pointer hover:ring-2 hover:ring-blue-500/20 transition-all"
                           />
                           <span className="text-sm text-gray-600">{style.bgColor}</span>
                         </div>
@@ -486,12 +488,12 @@ END:VCARD`;
               <div>
                 <button
                   onClick={() => toggleSection('eye')}
-                  className="w-full flex items-center justify-between text-left"
+                  className="w-full flex items-center justify-between text-left group"
                 >
-                  <h3 className="text-sm font-medium text-gray-900">Eye Style</h3>
+                  <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Eye Style</h3>
                   <ChevronDownIcon
-                    className={`w-5 h-5 text-gray-500 transition-transform ${
-                      activeSection === 'eye' ? 'transform rotate-180' : ''
+                    className={`w-5 h-5 text-gray-500 transition-all duration-200 ${
+                      activeSection === 'eye' ? 'transform rotate-180 text-blue-600' : ''
                     }`}
                   />
                 </button>
@@ -500,20 +502,20 @@ END:VCARD`;
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleStyleChange({ ...style, eyeStyle: 'square' })}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                           style.eyeStyle === 'square'
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                            : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
                         }`}
                       >
                         Square
                       </button>
                       <button
                         onClick={() => handleStyleChange({ ...style, eyeStyle: 'rounded' })}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                           style.eyeStyle === 'rounded'
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                            : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
                         }`}
                       >
                         Rounded
@@ -527,12 +529,12 @@ END:VCARD`;
               <div>
                 <button
                   onClick={() => toggleSection('logo')}
-                  className="w-full flex items-center justify-between text-left"
+                  className="w-full flex items-center justify-between text-left group"
                 >
-                  <h3 className="text-sm font-medium text-gray-900">Logo</h3>
+                  <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Logo</h3>
                   <ChevronDownIcon
-                    className={`w-5 h-5 text-gray-500 transition-transform ${
-                      activeSection === 'logo' ? 'transform rotate-180' : ''
+                    className={`w-5 h-5 text-gray-500 transition-all duration-200 ${
+                      activeSection === 'logo' ? 'transform rotate-180 text-blue-600' : ''
                     }`}
                   />
                 </button>
@@ -540,7 +542,7 @@ END:VCARD`;
                   <div className="mt-4">
                     <div className="flex items-center gap-4">
                       <label className="flex-1">
-                        <div className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                        <div className="flex items-center justify-center w-full px-4 py-2 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 hover:ring-2 hover:ring-blue-500/20 transition-all">
                           <span className="text-sm text-gray-600">Choose logo</span>
                           <input
                             type="file"
@@ -553,18 +555,18 @@ END:VCARD`;
                       {style.logo && (
                         <button
                           onClick={() => handleStyleChange({ ...style, logo: undefined })}
-                          className="px-3 py-1.5 text-sm text-red-600 hover:text-red-700"
+                          className="px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-colors"
                         >
                           Remove
                         </button>
                       )}
                     </div>
                     {style.logo && (
-                      <div className="mt-2">
+                      <div className="mt-4">
                         <img
                           src={style.logo}
                           alt="Logo preview"
-                          className="w-16 h-16 object-contain rounded-lg border border-gray-200"
+                          className="w-16 h-16 object-contain rounded-xl border border-gray-200 shadow-sm"
                         />
                       </div>
                     )}
@@ -577,17 +579,17 @@ END:VCARD`;
 
         {/* 右侧：QR 码显示 */}
         <div className="lg:col-span-5">
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-6">
-            <h2 className="text-base sm:text-lg font-medium text-gray-900 mb-4">QR Code Preview</h2>
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200/50 backdrop-blur-sm p-6 sm:p-8">
+            <h2 className="text-base sm:text-lg font-medium text-gray-900 mb-6">QR Code Preview</h2>
             <div className="flex justify-center">
               {qrCodeData ? (
                 <div className="w-full">
                   <QRCodeDisplay data={qrCodeData} style={style} />
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center w-full aspect-square border-2 border-dashed border-gray-300 rounded-lg">
+                <div className="flex flex-col items-center justify-center w-full aspect-square border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50/50">
                   <QrCodeIcon className="w-12 h-12 text-gray-400" />
-                  <p className="mt-2 text-sm text-gray-500">Generate a QR code to see preview</p>
+                  <p className="mt-3 text-sm text-gray-500">Generate a QR code to see preview</p>
                 </div>
               )}
             </div>
