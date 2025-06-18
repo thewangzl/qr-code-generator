@@ -10,11 +10,11 @@ interface Template {
   preview: string;
 }
 
-interface QRCodeTemplatesProps {
-  onSelectTemplate: (style: QRCodeStyle) => void;
+export interface QRCodeTemplatesProps {
+  onTemplateSelect: (templateStyle: QRCodeStyle) => void;
 }
 
-export default function QRCodeTemplates({ onSelectTemplate }: QRCodeTemplatesProps) {
+export default function QRCodeTemplates({ onTemplateSelect }: QRCodeTemplatesProps) {
   const templates: Template[] = [
     {
       id: 'classic',
@@ -65,15 +65,17 @@ export default function QRCodeTemplates({ onSelectTemplate }: QRCodeTemplatesPro
         {templates.map((template) => (
           <button
             key={template.id}
-            onClick={() => onSelectTemplate(template.style)}
+            onClick={() => onTemplateSelect(template.style)}
             className="p-4 border rounded-lg hover:border-blue-500 transition-colors"
           >
             <div className="space-y-2">
-              <QRCodeDisplay
-                text={template.preview}
-                style={template.style}
-                isPreview={true}
-              />
+              <div className="mt-2">
+                <QRCodeDisplay
+                  data="https://example.com"
+                  style={template.style}
+                  isPreview={true}
+                />
+              </div>
               <p className="text-sm text-gray-600">{template.name}</p>
             </div>
           </button>

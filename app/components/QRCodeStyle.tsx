@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 export interface QRCodeStyle {
   fgColor: string;
   bgColor: string;
-  eyeStyle: 'square' | 'circle';
+  eyeStyle: 'square' | 'rounded' | 'circle';
   logo?: string;
 }
 
@@ -33,7 +33,7 @@ export default function QRCodeStyle({ style, onStyleChange }: QRCodeStyleProps) 
     onStyleChange(newStyle);
   };
 
-  const handleEyeStyleChange = (style: 'square' | 'circle') => {
+  const handleEyeStyleChange = (style: 'square' | 'rounded' | 'circle') => {
     const newStyle = { ...localStyle, eyeStyle: style };
     setLocalStyle(newStyle);
     onStyleChange(newStyle);
@@ -54,66 +54,91 @@ export default function QRCodeStyle({ style, onStyleChange }: QRCodeStyleProps) 
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">Style Settings</h3>
+      <h3 className="text-lg font-semibold text-gray-900">Style Settings</h3>
+      
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Foreground Color
           </label>
-          <input
-            type="color"
-            value={localStyle.fgColor}
-            onChange={(e) => handleColorChange('fgColor', e.target.value)}
-            className="w-full h-10 rounded-lg cursor-pointer"
-          />
+          <div className="flex items-center space-x-2">
+            <input
+              type="color"
+              value={localStyle.fgColor}
+              onChange={(e) => handleColorChange('fgColor', e.target.value)}
+              className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200"
+            />
+            <span className="text-xs text-gray-500">{localStyle.fgColor}</span>
+          </div>
         </div>
+        
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Background Color
           </label>
-          <input
-            type="color"
-            value={localStyle.bgColor}
-            onChange={(e) => handleColorChange('bgColor', e.target.value)}
-            className="w-full h-10 rounded-lg cursor-pointer"
-          />
+          <div className="flex items-center space-x-2">
+            <input
+              type="color"
+              value={localStyle.bgColor}
+              onChange={(e) => handleColorChange('bgColor', e.target.value)}
+              className="w-10 h-10 rounded-lg cursor-pointer border border-gray-200"
+            />
+            <span className="text-xs text-gray-500">{localStyle.bgColor}</span>
+          </div>
         </div>
       </div>
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Eye Style
         </label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-3">
           <button
             onClick={() => handleEyeStyleChange('square')}
-            className={`p-2 border rounded-lg ${
+            className={`p-3 border-2 rounded-lg transition-all duration-200 ${
               localStyle.eyeStyle === 'square'
-                ? 'bg-blue-100 border-blue-500'
-                : 'border-gray-300 hover:border-blue-300'
+                ? 'bg-blue-50 border-blue-500 text-blue-600'
+                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
             }`}
           >
             <div className="w-6 h-6 mx-auto border-2 border-current" />
+            <span className="block mt-1 text-xs font-medium">Square</span>
           </button>
+          
+          <button
+            onClick={() => handleEyeStyleChange('rounded')}
+            className={`p-3 border-2 rounded-lg transition-all duration-200 ${
+              localStyle.eyeStyle === 'rounded'
+                ? 'bg-blue-50 border-blue-500 text-blue-600'
+                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+            }`}
+          >
+            <div className="w-6 h-6 mx-auto border-2 border-current" />
+            <span className="block mt-1 text-xs font-medium">Rounded</span>
+          </button>
+          
           <button
             onClick={() => handleEyeStyleChange('circle')}
-            className={`p-2 border rounded-lg ${
+            className={`p-3 border-2 rounded-lg transition-all duration-200 ${
               localStyle.eyeStyle === 'circle'
-                ? 'bg-blue-100 border-blue-500'
-                : 'border-gray-300 hover:border-blue-300'
+                ? 'bg-blue-50 border-blue-500 text-blue-600'
+                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
             }`}
           >
             <div className="w-6 h-6 mx-auto border-2 border-current rounded-full" />
+            <span className="block mt-1 text-xs font-medium">Circle</span>
           </button>
         </div>
       </div>
+
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          添加 Logo
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Logo
         </label>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3">
           <label className="flex-1">
-            <div className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 text-center">
-              <span className="text-sm text-gray-600">选择图片</span>
+            <div className="w-full px-3 py-2 bg-white border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 text-center">
+              <span className="text-xs font-medium text-gray-600">Choose Image</span>
               <input
                 type="file"
                 accept="image/*"
@@ -129,9 +154,9 @@ export default function QRCodeStyle({ style, onStyleChange }: QRCodeStyleProps) 
                 setLocalStyle(newStyle);
                 onStyleChange(newStyle);
               }}
-              className="px-3 py-2 text-sm text-red-600 hover:text-red-700"
+              className="px-3 py-2 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
             >
-              移除
+              Remove
             </button>
           )}
         </div>

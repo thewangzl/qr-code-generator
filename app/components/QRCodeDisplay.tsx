@@ -2,72 +2,119 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import QRCodeStyling from 'qr-code-styling';
+import QRCodeStyling, { DrawType, CornerSquareType } from 'qr-code-styling';
 import { QRCodeStyle } from './QRCodeStyle';
 
-interface QRCodeDisplayProps {
-  text: string;
+export type EyeStyleType = 'square' | 'rounded' | 'circle';
+
+export interface QRCodeDisplayProps {
+  data: string;
   style: QRCodeStyle;
   isPreview?: boolean;
 }
 
-export default function QRCodeDisplay({ text, style, isPreview = false }: QRCodeDisplayProps) {
+export default function QRCodeDisplay({ data, style, isPreview = false }: QRCodeDisplayProps) {
   const qrRef = useRef<HTMLDivElement>(null);
+  const qrCodeRef = useRef<QRCodeStyling | null>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
-  const qrCode = useRef<QRCodeStyling | null>(null);
 
   // 获取定位点样式
-  const getEyeStyle = (style: string) => {
-    return style === 'circle' ? 'extra-rounded' : 'square';
+  const getEyeStyle = (style: string): CornerSquareType => {
+    switch (style) {
+      case 'circle':
+        return 'extra-rounded';
+      case 'rounded':
+        return 'rounded';
+      default:
+        return 'square';
+    }
   };
 
   // 初始化 QR 码
   useEffect(() => {
-    if (!qrRef.current) return;
+    if (!data || !qrRef.current) return;
 
-    // 清除之前的 QR 码
-    qrRef.current.innerHTML = '';
+    // 清理之前的 QR 码
+    if (qrRef.current) {
+      qrRef.current.innerHTML = '';
+    }
+    if (qrCodeRef.current) {
+      qrCodeRef.current = null;
+    }
 
-    // 创建新的 QR 码实例
-    qrCode.current = new QRCodeStyling({
+    console.log('QRCodeDisplay - Current style:', {
+      ...style,
+      logo: style.logo ? 'Logo present' : 'No logo'
+    });
+
+    // 创建 QR 码实例
+    const qrCode = new QRCodeStyling({
       width: isPreview ? 120 : 300,
       height: isPreview ? 120 : 300,
       type: 'canvas',
-      data: text || ' ',
+      data: data,
       dotsOptions: {
         color: style.fgColor,
         type: 'rounded',
       },
       cornersSquareOptions: {
-        type: getEyeStyle(style.eyeStyle),
         color: style.fgColor,
+        type: getEyeStyle(style.eyeStyle),
       },
       cornersDotOptions: {
-        type: 'square',
         color: style.fgColor,
+        type: 'dot',
       },
       backgroundOptions: {
         color: style.bgColor,
       },
-      image: style.logo,
+      qrOptions: {
+        typeNumber: 0,
+        mode: 'Byte',
+        errorCorrectionLevel: 'H',
+      },
       imageOptions: {
         crossOrigin: 'anonymous',
-        margin: 10,
+        margin: 0,
       },
     });
 
-    // 将 QR 码添加到 DOM
-    qrCode.current.append(qrRef.current);
+    // 如果有 logo，设置它
+    if (style.logo) {
+      console.log('Setting logo in QR code');
+      qrCode.update({
+        image: style.logo,
+        imageOptions: {
+          hideBackgroundDots: true,
+          imageSize: 0.4,
+          margin: 0,
+        },
+      });
+    }
 
-    // 获取 QR 码的 Data URL
-    qrCode.current.getRawData().then((data) => {
-      if (data) {
-        const blob = new Blob([data], { type: 'image/png' });
-        const url = URL.createObjectURL(blob);
-        setQrDataUrl(url);
-      }
-    });
+    // 保存实例引用
+    qrCodeRef.current = qrCode;
 
+    // 渲染 QR 码
+    try {
+      qrCode.append(qrRef.current);
+      console.log('QRCodeDisplay - QR code generated successfully');
+
+      // 获取 QR 码的 Data URL
+      qrCode.getRawData().then((data) => {
+        if (data) {
+          const blob = new Blob([data], { type: 'image/png' });
+          const url = URL.createObjectURL(blob);
+          setQrDataUrl(url);
+        }
+      }).catch(error => {
+        console.error('QRCodeDisplay - Error getting QR code data:', error);
+      });
+    } catch (error) {
+      console.error('QRCodeDisplay - Error generating QR code:', error);
+    }
+
+    // 清理函数
     return () => {
       if (qrRef.current) {
         qrRef.current.innerHTML = '';
@@ -76,82 +123,44 @@ export default function QRCodeDisplay({ text, style, isPreview = false }: QRCode
         URL.revokeObjectURL(qrDataUrl);
       }
     };
-  }, [style.eyeStyle]); // 添加 style.eyeStyle 作为依赖
-
-  // 更新 QR 码内容
-  useEffect(() => {
-    if (!qrCode.current) return;
-
-    qrCode.current.update({
-      data: text || ' ',
-      dotsOptions: {
-        color: style.fgColor,
-        type: 'rounded',
-      },
-      cornersSquareOptions: {
-        type: getEyeStyle(style.eyeStyle),
-        color: style.fgColor,
-      },
-      cornersDotOptions: {
-        type: 'square',
-        color: style.fgColor,
-      },
-      backgroundOptions: {
-        color: style.bgColor,
-      },
-      image: style.logo,
-    });
-
-    // 更新 QR 码的 Data URL
-    qrCode.current.getRawData().then((data) => {
-      if (data) {
-        const blob = new Blob([data], { type: 'image/png' });
-        const url = URL.createObjectURL(blob);
-        setQrDataUrl((prevUrl) => {
-          if (prevUrl) {
-            URL.revokeObjectURL(prevUrl);
-          }
-          return url;
-        });
-      }
-    });
-  }, [text, style.fgColor, style.bgColor, style.logo]); // 分离样式依赖
+  }, [data, style, isPreview]);
 
   const handleDownload = () => {
-    if (!qrCode.current) return;
-    qrCode.current.download({ name: 'qrcode', extension: 'png' });
+    if (!qrCodeRef.current) return;
+    qrCodeRef.current.download({ name: 'qrcode', extension: 'png' });
   };
 
-  if (!text) {
+  if (!data) {
     return (
-      <div className={`flex items-center justify-center ${isPreview ? 'w-[120px] h-[120px]' : 'w-[300px] h-[300px]'} bg-gray-100 rounded-lg`}>
-        <p className="text-gray-400 text-sm">Enter content to generate QR code</p>
+      <div className={`flex items-center justify-center ${isPreview ? 'w-[120px] h-[120px]' : 'w-[300px] h-[300px]'} bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200`}>
+        <p className="text-sm text-gray-400">Enter content to generate QR code</p>
       </div>
     );
   }
 
   return (
     <div className={`flex flex-col items-center ${isPreview ? 'w-[120px]' : 'w-[300px]'}`}>
-      <div className="bg-white p-4 rounded-lg shadow-lg">
-        <div ref={qrRef} />
+      <div className="bg-white p-6 rounded-2xl shadow-lg">
+        <div ref={qrRef} className="rounded-xl overflow-hidden" />
         {/* 备用 QR 码显示 */}
         {!qrDataUrl && (
           <QRCodeSVG
-            value={text}
+            value={data}
             size={isPreview ? 120 : 300}
             bgColor={style.bgColor}
             fgColor={style.fgColor}
             level="H"
             includeMargin={true}
+            className="rounded-xl"
           />
         )}
       </div>
       {!isPreview && (
-        <div className="mt-4 text-center space-y-2">
-          <p className="text-sm text-gray-600">Scan this QR code with your device</p>
+        <div className="mt-6 text-center space-y-4">
+          <p className="text-sm text-gray-500">Scan this QR code with your device</p>
           <button
             onClick={handleDownload}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
           >
             Download QR Code
           </button>
