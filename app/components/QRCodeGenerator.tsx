@@ -108,6 +108,35 @@ END:VCARD`;
     setActiveSection(null);
   };
 
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // 检查文件类型
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+
+    // 检查文件大小（2MB限制）
+    if (file.size > 2 * 1024 * 1024) {
+      alert('File size should be less than 2MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result;
+      if (typeof result === 'string') {
+        handleStyleChange({ ...style, logo: result });
+      }
+    };
+    reader.onerror = () => {
+      alert('Error reading file');
+    };
+    reader.readAsDataURL(file);
+  };
+
   const toggleSection = (section: StyleSection) => {
     setActiveSection(activeSection === section ? null : section);
   };
@@ -309,7 +338,7 @@ END:VCARD`;
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         {/* 左侧：设置面板 */}
-        <div className="lg:col-span-9 space-y-4">
+        <div className="lg:col-span-7 space-y-4">
           {/* QR Code Content */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-6">
             {/* Type Selection */}
@@ -395,47 +424,111 @@ END:VCARD`;
 
           {/* Style Settings */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-6">
-            <button
-              onClick={() => toggleSection('style')}
-              className="w-full flex items-center justify-between text-left"
-            >
-              <h2 className="text-base sm:text-lg font-medium text-gray-900">Style Settings</h2>
-              <ChevronDownIcon
-                className={`w-5 h-5 text-gray-500 transition-transform ${
-                  activeSection === 'style' ? 'transform rotate-180' : ''
-                }`}
-              />
-            </button>
-            {activeSection === 'style' && (
-              <div className="mt-4">
-                <QRCodeStyle style={style} onStyleChange={handleStyleChange} />
-              </div>
-            )}
-          </div>
-
-          {/* Templates */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-6">
-            <button
-              onClick={() => toggleSection('template')}
-              className="w-full flex items-center justify-between text-left"
-            >
-              <h2 className="text-base sm:text-lg font-medium text-gray-900">Templates</h2>
-              <ChevronDownIcon
-                className={`w-5 h-5 text-gray-500 transition-transform ${
-                  activeSection === 'template' ? 'transform rotate-180' : ''
-                }`}
-              />
-            </button>
-            {activeSection === 'template' && (
-              <div className="mt-4">
+            <div className="space-y-6">
+              {/* Templates */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Templates</h3>
                 <QRCodeTemplates onTemplateSelect={handleTemplateSelect} />
               </div>
-            )}
+
+              {/* Color Settings */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Colors</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-2">Foreground</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={style.fgColor}
+                        onChange={(e) => handleStyleChange({ ...style, fgColor: e.target.value })}
+                        className="w-10 h-10 rounded-lg border border-gray-300 cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-600">{style.fgColor}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-2">Background</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={style.bgColor}
+                        onChange={(e) => handleStyleChange({ ...style, bgColor: e.target.value })}
+                        className="w-10 h-10 rounded-lg border border-gray-300 cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-600">{style.bgColor}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Eye Style */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Eye Style</h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleStyleChange({ ...style, eyeStyle: 'square' })}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                      style.eyeStyle === 'square'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    Square
+                  </button>
+                  <button
+                    onClick={() => handleStyleChange({ ...style, eyeStyle: 'rounded' })}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                      style.eyeStyle === 'rounded'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    Rounded
+                  </button>
+                </div>
+              </div>
+
+              {/* Logo Upload */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Logo</h3>
+                <div className="flex items-center gap-4">
+                  <label className="flex-1">
+                    <div className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                      <span className="text-sm text-gray-600">Choose logo</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleLogoUpload}
+                        className="hidden"
+                      />
+                    </div>
+                  </label>
+                  {style.logo && (
+                    <button
+                      onClick={() => handleStyleChange({ ...style, logo: undefined })}
+                      className="px-3 py-1.5 text-sm text-red-600 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                {style.logo && (
+                  <div className="mt-2">
+                    <img
+                      src={style.logo}
+                      alt="Logo preview"
+                      className="w-16 h-16 object-contain rounded-lg border border-gray-200"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* 右侧：QR 码显示 */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-5">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-6">
             <h2 className="text-base sm:text-lg font-medium text-gray-900 mb-4">QR Code Preview</h2>
             <div className="flex justify-center">
