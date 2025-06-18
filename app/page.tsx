@@ -10,7 +10,6 @@ export default function Home() {
       <Header />
       <main className="flex-grow p-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-8">二维码生成器</h1>
           <QRCodeGenerator />
         </div>
       </main>
