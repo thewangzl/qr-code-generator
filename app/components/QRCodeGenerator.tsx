@@ -1,11 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { QrCodeIcon } from '@heroicons/react/24/outline';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import QRCodeDisplay from './QRCodeDisplay';
 import QRCodeStylePanel from './QRCodeStylePanel';
-import QRCodeTemplates from './QRCodeTemplates';
 import QRCodeInput from './QRCodeInput';
 import { QRCodeType, QRCodeStyle, QRCodeData } from '../types/qrcode';
 
@@ -32,7 +29,6 @@ export default function QRCodeGenerator() {
     bgColor: '#ffffff',
     eyeStyle: 'square',
   });
-  const [activeSection, setActiveSection] = useState<'template' | 'color' | 'eye' | 'logo'>('template');
   const [lastValidType, setLastValidType] = useState<QRCodeType>('url');
   const [lastValidData, setLastValidData] = useState<QRCodeData>({ url: '' });
 
@@ -63,43 +59,6 @@ export default function QRCodeGenerator() {
 
   const handleStyleChange = (newStyle: QRCodeStyle) => {
     setStyle(newStyle);
-  };
-
-  const handleTemplateSelect = (templateStyle: QRCodeStyle) => {
-    setStyle(templateStyle);
-  };
-
-  const toggleSection = (section: 'template' | 'color' | 'eye' | 'logo') => {
-    setActiveSection(activeSection === section ? 'template' : section);
-  };
-
-  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // 检查文件类型
-    if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file');
-      return;
-    }
-
-    // 检查文件大小（2MB限制）
-    if (file.size > 2 * 1024 * 1024) {
-      alert('File size should be less than 2MB');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result;
-      if (typeof result === 'string') {
-        handleStyleChange({ ...style, logo: result });
-      }
-    };
-    reader.onerror = () => {
-      alert('Error reading file');
-    };
-    reader.readAsDataURL(file);
   };
 
   return (

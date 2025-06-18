@@ -1,6 +1,5 @@
 'use client';
 
-import QRCodeDisplay from './QRCodeDisplay';
 import { QRCodeStyle as QRCodeStyleType } from '../types/qrcode';
 
 interface QRCodeTemplatesProps {
