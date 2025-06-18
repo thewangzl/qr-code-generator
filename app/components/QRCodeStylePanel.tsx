@@ -51,9 +51,9 @@ export default function QRCodeStylePanel({ style, onStyleChange }: QRCodeStylePa
         <div>
           <button
             onClick={() => toggleSection('template')}
-            className="w-full flex items-center justify-between text-left group"
+            className="w-full flex items-center justify-between text-left group bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 p-4 rounded-xl transition-all duration-200"
           >
-            <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Templates</h3>
+            <h3 className="text-base font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Templates</h3>
             <ChevronDownIcon
               className={`w-5 h-5 text-gray-500 transition-all duration-200 ${
                 activeSection === 'template' ? 'transform rotate-180 text-blue-600' : ''
@@ -71,9 +71,9 @@ export default function QRCodeStylePanel({ style, onStyleChange }: QRCodeStylePa
         <div>
           <button
             onClick={() => toggleSection('color')}
-            className="w-full flex items-center justify-between text-left group"
+            className="w-full flex items-center justify-between text-left group bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 p-4 rounded-xl transition-all duration-200"
           >
-            <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Colors</h3>
+            <h3 className="text-base font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Colors</h3>
             <ChevronDownIcon
               className={`w-5 h-5 text-gray-500 transition-all duration-200 ${
                 activeSection === 'color' ? 'transform rotate-180 text-blue-600' : ''
@@ -116,9 +116,9 @@ export default function QRCodeStylePanel({ style, onStyleChange }: QRCodeStylePa
         <div>
           <button
             onClick={() => toggleSection('eye')}
-            className="w-full flex items-center justify-between text-left group"
+            className="w-full flex items-center justify-between text-left group bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 p-4 rounded-xl transition-all duration-200"
           >
-            <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Eye Style</h3>
+            <h3 className="text-base font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Eye Style</h3>
             <ChevronDownIcon
               className={`w-5 h-5 text-gray-500 transition-all duration-200 ${
                 activeSection === 'eye' ? 'transform rotate-180 text-blue-600' : ''
@@ -157,9 +157,9 @@ export default function QRCodeStylePanel({ style, onStyleChange }: QRCodeStylePa
         <div>
           <button
             onClick={() => toggleSection('logo')}
-            className="w-full flex items-center justify-between text-left group"
+            className="w-full flex items-center justify-between text-left group bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 p-4 rounded-xl transition-all duration-200"
           >
-            <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Logo</h3>
+            <h3 className="text-base font-medium text-gray-900 group-hover:text-blue-600 transition-colors">Logo</h3>
             <ChevronDownIcon
               className={`w-5 h-5 text-gray-500 transition-all duration-200 ${
                 activeSection === 'logo' ? 'transform rotate-180 text-blue-600' : ''
