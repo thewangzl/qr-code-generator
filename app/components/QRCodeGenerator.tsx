@@ -10,7 +10,7 @@ import QRCodeInput from './QRCodeInput';
 import { QRCodeType, QRCodeStyle, QRCodeData } from '../types/qrcode';
 
 export default function QRCodeGenerator() {
-  const [type, setType] = useState<QRCodeType>('text');
+  const [type, setType] = useState<QRCodeType>('url');
   const [data, setData] = useState<QRCodeData>({ text: '' });
   const [style, setStyle] = useState<QRCodeStyle>({
     fgColor: '#000000',

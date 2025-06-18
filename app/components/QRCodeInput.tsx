@@ -12,14 +12,16 @@ export default function QRCodeInput({ type, data, onTypeChange, onDataChange }: 
     switch (type) {
       case 'url':
         return (
-          <input
-            type="url"
-            id="url"
-            value={data.url || ''}
-            onChange={(e) => onDataChange({ ...data, url: e.target.value })}
-            placeholder="Enter URL"
-            className="flex-1 px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-          />
+          <div className="w-full">
+            <input
+              type="url"
+              id="url"
+              value={data.url || ''}
+              onChange={(e) => onDataChange({ ...data, url: e.target.value })}
+              placeholder="Enter URL"
+              className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+            />
+          </div>
         );
       case 'text':
         return (
@@ -216,7 +218,6 @@ export default function QRCodeInput({ type, data, onTypeChange, onDataChange }: 
     <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200/50 backdrop-blur-sm p-6 sm:p-8">
       <div className="space-y-6">
         <div>
-          <h2 className="text-base sm:text-lg font-medium text-gray-900 mb-4">QR Code Content</h2>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => onTypeChange('url')}
