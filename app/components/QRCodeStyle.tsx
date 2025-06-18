@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { QRCodeStyle as QRCodeStyleType } from '../types/qrcode';
 
 export interface QRCodeStyle {
   fgColor: string;
@@ -10,12 +11,12 @@ export interface QRCodeStyle {
 }
 
 interface QRCodeStyleProps {
-  style: QRCodeStyle;
-  onStyleChange: (style: QRCodeStyle) => void;
+  style: QRCodeStyleType;
+  onChange: (style: QRCodeStyleType) => void;
 }
 
-export default function QRCodeStyle({ style, onStyleChange }: QRCodeStyleProps) {
-  const [localStyle, setLocalStyle] = useState<QRCodeStyle>({
+export default function QRCodeStyle({ style, onChange }: QRCodeStyleProps) {
+  const [localStyle, setLocalStyle] = useState<QRCodeStyleType>({
     ...style,
     eyeStyle: style.eyeStyle || 'square'
   });
@@ -30,13 +31,13 @@ export default function QRCodeStyle({ style, onStyleChange }: QRCodeStyleProps) 
   const handleColorChange = (type: 'fgColor' | 'bgColor', value: string) => {
     const newStyle = { ...localStyle, [type]: value };
     setLocalStyle(newStyle);
-    onStyleChange(newStyle);
+    onChange(newStyle);
   };
 
   const handleEyeStyleChange = (style: 'square' | 'rounded' | 'circle') => {
     const newStyle = { ...localStyle, eyeStyle: style };
     setLocalStyle(newStyle);
-    onStyleChange(newStyle);
+    onChange(newStyle);
   };
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +47,7 @@ export default function QRCodeStyle({ style, onStyleChange }: QRCodeStyleProps) 
       reader.onload = (e) => {
         const newStyle = { ...localStyle, logo: e.target?.result as string };
         setLocalStyle(newStyle);
-        onStyleChange(newStyle);
+        onChange(newStyle);
       };
       reader.readAsDataURL(file);
     }
@@ -152,7 +153,7 @@ export default function QRCodeStyle({ style, onStyleChange }: QRCodeStyleProps) 
               onClick={() => {
                 const newStyle = { ...style, logo: undefined };
                 setLocalStyle(newStyle);
-                onStyleChange(newStyle);
+                onChange(newStyle);
               }}
               className="px-3 py-2 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
             >

@@ -1,110 +1,39 @@
 'use client';
 
 import { useState } from 'react';
+import { QrCodeIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import QRCodeDisplay from './QRCodeDisplay';
 import QRCodeStyle from './QRCodeStyle';
 import QRCodeTemplates from './QRCodeTemplates';
-import { QRCodeStyle as QRCodeStyleType } from './QRCodeStyle';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { QrCodeIcon } from '@heroicons/react/24/outline';
-
-type StyleSection = 'template' | 'color' | 'eye' | 'logo';
-
-type QRCodeType = 'url' | 'text' | 'vcard' | 'wifi';
-
-interface VCardData {
-  name: string;
-  company: string;
-  title: string;
-  phone: string;
-  email: string;
-  website: string;
-}
-
-interface WiFiData {
-  ssid: string;
-  password: string;
-  encryption: 'WPA' | 'WEP' | 'nopass';
-  hidden: boolean;
-}
+import QRCodeInput from './QRCodeInput';
+import { QRCodeType, QRCodeStyle as QRCodeStyleType, QRCodeData } from '../types/qrcode';
 
 export default function QRCodeGenerator() {
   const [type, setType] = useState<QRCodeType>('url');
   const [content, setContent] = useState('');
-  const [vcardData, setVCardData] = useState<VCardData>({
-    name: '',
-    company: '',
-    title: '',
-    phone: '',
-    email: '',
-    website: ''
-  });
-  const [wifiData, setWifiData] = useState<WiFiData>({
-    ssid: '',
-    password: '',
-    encryption: 'WPA',
-    hidden: false
-  });
-  const [qrCodeData, setQrCodeData] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState<StyleSection | null>(null);
   const [style, setStyle] = useState<QRCodeStyleType>({
     fgColor: '#000000',
     bgColor: '#FFFFFF',
     eyeStyle: 'square',
   });
+  const [activeSection, setActiveSection] = useState<'template' | 'color' | 'eye' | 'logo'>('template');
 
   const handleTypeChange = (newType: QRCodeType) => {
     setType(newType);
     setContent('');
-    setQrCodeData(null);
-  };
-
-  const handleVCardChange = (field: keyof VCardData, value: string) => {
-    setVCardData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleWiFiChange = (field: keyof WiFiData, value: string | boolean) => {
-    setWifiData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleGenerate = () => {
-    let qrContent = '';
-    
-    switch (type) {
-      case 'url':
-      case 'text':
-        if (!content) return;
-        qrContent = content;
-        break;
-      case 'vcard':
-        qrContent = `BEGIN:VCARD
-VERSION:3.0
-FN:${vcardData.name}
-ORG:${vcardData.company}
-TITLE:${vcardData.title}
-TEL:${vcardData.phone}
-EMAIL:${vcardData.email}
-URL:${vcardData.website}
-END:VCARD`;
-        break;
-      case 'wifi':
-        qrContent = `WIFI:S:${wifiData.ssid};T:${wifiData.encryption};P:${wifiData.password};H:${wifiData.hidden};`;
-        break;
-    }
-
-    setQrCodeData(qrContent);
   };
 
   const handleStyleChange = (newStyle: QRCodeStyleType) => {
-    console.log('Style changed:', {
-      ...newStyle,
-      logo: newStyle.logo ? 'Logo present' : 'No logo'
-    });
     setStyle(newStyle);
   };
 
   const handleTemplateSelect = (templateStyle: QRCodeStyleType) => {
     setStyle(templateStyle);
+  };
+
+  const toggleSection = (section: 'template' | 'color' | 'eye' | 'logo') => {
+    setActiveSection(activeSection === section ? 'template' : section);
   };
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,189 +65,7 @@ END:VCARD`;
     reader.readAsDataURL(file);
   };
 
-  const toggleSection = (section: StyleSection) => {
-    setActiveSection(activeSection === section ? null : section);
-  };
-
-  const renderInputField = () => {
-    switch (type) {
-      case 'url':
-        return (
-          <div>
-            <div className="flex gap-2">
-              <input
-                type="url"
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Enter URL"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-              />
-              <button
-                onClick={handleGenerate}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm whitespace-nowrap"
-              >
-                Generate
-              </button>
-            </div>
-          </div>
-        );
-      case 'text':
-        return (
-          <div>
-            <div className="flex gap-2">
-              <textarea
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Enter text"
-                rows={4}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm resize-none"
-              />
-              <button
-                onClick={handleGenerate}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm whitespace-nowrap"
-              >
-                Generate
-              </button>
-            </div>
-          </div>
-        );
-      case 'vcard':
-        return (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                <input
-                  type="text"
-                  value={vcardData.name}
-                  onChange={(e) => handleVCardChange('name', e.target.value)}
-                  placeholder="Full Name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
-                <input
-                  type="text"
-                  value={vcardData.company}
-                  onChange={(e) => handleVCardChange('company', e.target.value)}
-                  placeholder="Company Name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                <input
-                  type="text"
-                  value={vcardData.title}
-                  onChange={(e) => handleVCardChange('title', e.target.value)}
-                  placeholder="Job Title"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                <input
-                  type="tel"
-                  value={vcardData.phone}
-                  onChange={(e) => handleVCardChange('phone', e.target.value)}
-                  placeholder="Phone Number"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                <input
-                  type="email"
-                  value={vcardData.email}
-                  onChange={(e) => handleVCardChange('email', e.target.value)}
-                  placeholder="Email Address"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Website</label>
-                <input
-                  type="url"
-                  value={vcardData.website}
-                  onChange={(e) => handleVCardChange('website', e.target.value)}
-                  placeholder="Website URL"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={handleGenerate}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-              >
-                Generate
-              </button>
-            </div>
-          </div>
-        );
-      case 'wifi':
-        return (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Network Name (SSID)</label>
-                <input
-                  type="text"
-                  value={wifiData.ssid}
-                  onChange={(e) => handleWiFiChange('ssid', e.target.value)}
-                  placeholder="WiFi Network Name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                <input
-                  type="password"
-                  value={wifiData.password}
-                  onChange={(e) => handleWiFiChange('password', e.target.value)}
-                  placeholder="WiFi Password"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Encryption</label>
-                <select
-                  value={wifiData.encryption}
-                  onChange={(e) => handleWiFiChange('encryption', e.target.value as 'WPA' | 'WEP' | 'nopass')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white"
-                >
-                  <option value="WPA">WPA/WPA2</option>
-                  <option value="WEP">WEP</option>
-                  <option value="nopass">No Password</option>
-                </select>
-              </div>
-              <div className="flex items-center">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={wifiData.hidden}
-                    onChange={(e) => handleWiFiChange('hidden', e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">Hidden Network</span>
-                </label>
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={handleGenerate}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-              >
-                Generate
-              </button>
-            </div>
-          </div>
-        );
-    }
-  };
+  const qrCodeData: QRCodeData | null = content ? { type, content, style } : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 sm:py-12">
@@ -335,86 +82,12 @@ END:VCARD`;
         {/* 左侧：设置面板 */}
         <div className="lg:col-span-7 space-y-6">
           {/* QR Code Content */}
-          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200/50 backdrop-blur-sm p-6 sm:p-8">
-            {/* Type Selection */}
-            <div className="mb-6">
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => handleTypeChange('url')}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    type === 'url'
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
-                      : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
-                  }`}
-                >
-                  URL
-                </button>
-                <button
-                  onClick={() => handleTypeChange('text')}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    type === 'text'
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
-                      : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
-                  }`}
-                >
-                  Text
-                </button>
-                <button
-                  onClick={() => handleTypeChange('vcard')}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    type === 'vcard'
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
-                      : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
-                  }`}
-                >
-                  vCard
-                </button>
-                <button
-                  onClick={() => handleTypeChange('wifi')}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    type === 'wifi'
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
-                      : 'bg-white text-gray-700 hover:bg-gray-50 ring-1 ring-gray-200'
-                  }`}
-                >
-                  WiFi
-                </button>
-                <button
-                  disabled
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
-                >
-                  Email
-                </button>
-                <button
-                  disabled
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
-                >
-                  Phone
-                </button>
-                <button
-                  disabled
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
-                >
-                  SMS
-                </button>
-                <button
-                  disabled
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
-                >
-                  Event
-                </button>
-                <button
-                  disabled
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-50 ring-1 ring-gray-200 cursor-not-allowed"
-                >
-                  Location
-                </button>
-              </div>
-            </div>
-
-            {/* Content Input */}
-            {renderInputField()}
-          </div>
+          <QRCodeInput
+            type={type}
+            content={content}
+            onTypeChange={handleTypeChange}
+            onContentChange={setContent}
+          />
 
           {/* Style Settings */}
           <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200/50 backdrop-blur-sm p-6 sm:p-8">

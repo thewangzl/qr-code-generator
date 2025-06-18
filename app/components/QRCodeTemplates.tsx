@@ -1,87 +1,55 @@
 'use client';
 
 import QRCodeDisplay from './QRCodeDisplay';
-import { QRCodeStyle } from './QRCodeStyle';
-
-const templates = [
-  {
-    style: {
-      fgColor: '#000000',
-      bgColor: '#FFFFFF',
-      eyeStyle: 'square',
-    } as QRCodeStyle,
-  },
-  {
-    style: {
-      fgColor: '#1E40AF',
-      bgColor: '#FFFFFF',
-      eyeStyle: 'rounded',
-    } as QRCodeStyle,
-  },
-  {
-    style: {
-      fgColor: '#FFFFFF',
-      bgColor: '#1E40AF',
-      eyeStyle: 'square',
-    } as QRCodeStyle,
-  },
-  {
-    style: {
-      fgColor: '#FFFFFF',
-      bgColor: '#1E40AF',
-      eyeStyle: 'rounded',
-    } as QRCodeStyle,
-  },
-  {
-    style: {
-      fgColor: '#000000',
-      bgColor: '#F3F4F6',
-      eyeStyle: 'square',
-    } as QRCodeStyle,
-  },
-  {
-    style: {
-      fgColor: '#000000',
-      bgColor: '#F3F4F6',
-      eyeStyle: 'rounded',
-    } as QRCodeStyle,
-  },
-  {
-    style: {
-      fgColor: '#1E40AF',
-      bgColor: '#F3F4F6',
-      eyeStyle: 'square',
-    } as QRCodeStyle,
-  },
-  {
-    style: {
-      fgColor: '#1E40AF',
-      bgColor: '#F3F4F6',
-      eyeStyle: 'rounded',
-    } as QRCodeStyle,
-  },
-];
+import { QRCodeStyle as QRCodeStyleType } from '../types/qrcode';
 
 interface QRCodeTemplatesProps {
-  onTemplateSelect: (style: QRCodeStyle) => void;
+  onTemplateSelect: (style: QRCodeStyleType) => void;
 }
 
 export default function QRCodeTemplates({ onTemplateSelect }: QRCodeTemplatesProps) {
+  const templates = [
+    {
+      name: 'Classic',
+      style: {
+        fgColor: '#000000',
+        bgColor: '#FFFFFF',
+        eyeStyle: 'square' as const,
+      },
+    },
+    {
+      name: 'Modern',
+      style: {
+        fgColor: '#2563EB',
+        bgColor: '#F8FAFC',
+        eyeStyle: 'rounded' as const,
+      },
+    },
+    {
+      name: 'Dark',
+      style: {
+        fgColor: '#FFFFFF',
+        bgColor: '#1E293B',
+        eyeStyle: 'rounded' as const,
+      },
+    },
+  ];
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-      {templates.map((template, index) => (
+    <div className="grid grid-cols-3 gap-4">
+      {templates.map((template) => (
         <button
-          key={index}
+          key={template.name}
           onClick={() => onTemplateSelect(template.style)}
-          className="group relative bg-white rounded-lg p-3 hover:shadow-md transition-shadow"
+          className="flex flex-col items-center p-4 rounded-xl border border-gray-200 hover:border-blue-500 hover:ring-2 hover:ring-blue-500/20 transition-all"
         >
-          <div className="aspect-square w-full max-w-[120px] mx-auto">
-            <QRCodeDisplay
-              data="https://example.com"
-              style={template.style}
-              size={120}
-            />
-          </div>
+          <div
+            className="w-16 h-16 rounded-lg mb-2"
+            style={{
+              background: `linear-gradient(45deg, ${template.style.fgColor}, ${template.style.bgColor})`,
+            }}
+          />
+          <span className="text-sm text-gray-600">{template.name}</span>
         </button>
       ))}
     </div>
