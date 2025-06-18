@@ -126,8 +126,26 @@ export default function QRCodeDisplay({ data, style, isPreview = false }: QRCode
   }, [data, style, isPreview]);
 
   const handleDownload = () => {
-    if (!qrCodeRef.current) return;
-    qrCodeRef.current.download({ name: 'qrcode', extension: 'png' });
+    if (qrDataUrl) {
+      const link = document.createElement('a');
+      link.href = qrDataUrl;
+      link.download = 'qrcode.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleCopy = async () => {
+    if (qrDataUrl) {
+      try {
+        await navigator.clipboard.writeText(qrDataUrl);
+        alert('QR code image URL copied to clipboard!');
+      } catch (err) {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy QR code URL');
+      }
+    }
   };
 
   if (!data) {
@@ -139,33 +157,28 @@ export default function QRCodeDisplay({ data, style, isPreview = false }: QRCode
   }
 
   return (
-    <div className={`flex flex-col items-center ${isPreview ? 'w-[120px]' : 'w-[300px]'}`}>
-      <div className="bg-white p-6 rounded-2xl shadow-lg">
-        <div ref={qrRef} className="rounded-xl overflow-hidden" />
-        {/* 备用 QR 码显示 */}
-        {!qrDataUrl && (
-          <QRCodeSVG
-            value={data}
-            size={isPreview ? 120 : 300}
-            bgColor={style.bgColor}
-            fgColor={style.fgColor}
-            level="H"
-            includeMargin={true}
-            className="rounded-xl"
-          />
+    <div className="max-w-[800px] mx-auto">
+      <div className="bg-white rounded-2xl shadow-sm p-6">
+        <div className="flex justify-center">
+          <div ref={qrRef} className="w-full max-w-[400px] aspect-square" />
+        </div>
+        {qrDataUrl && (
+          <div className="mt-4 flex justify-center space-x-4">
+            <button
+              onClick={handleDownload}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Download
+            </button>
+            <button
+              onClick={handleCopy}
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Copy
+            </button>
+          </div>
         )}
       </div>
-      {!isPreview && (
-        <div className="mt-6 text-center space-y-4">
-          <p className="text-sm text-gray-500">Scan this QR code with your device</p>
-          <button
-            onClick={handleDownload}
-            className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
-          >
-            Download QR Code
-          </button>
-        </div>
-      )}
     </div>
   );
 } 
