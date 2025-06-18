@@ -6,7 +6,7 @@ export default function Footer() {
           <div className="text-sm text-gray-500">
             © {new Date().getFullYear()} QR Code Generator. All rights reserved.
           </div>
-          <div className="flex space-x-6">
+          <div className="hidden">
             <a
               href="#"
               className="text-gray-400 hover:text-gray-500"
